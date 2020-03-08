@@ -1,0 +1,22 @@
+import numpy as np 
+import matplotlib.pyplot as plt 
+from sklearn.neural_network import MLPRegressor
+
+x = np.arange(-10,10,0.1)
+y = 12 + 3 * np.exp(-0.05*x) + 1.4 * np.sin(1.2*x) + 2.1 * np.sin(-2.2*x + 3)
+np.random.seed(42)
+
+y_noise = y + np.random.normal(0, 0.5, size = len(y))
+mlp = MLPRegressor(hidden_layer_sizes=(30,20,10), max_iter=10000, solver='lbfgs', alpha=0.9, activation='tanh') 
+yfit = mlp.fit(x[:, None], y_noise).predict(x[:, None])
+
+
+plt.figure(figsize= (10,8)) 
+plt.plot(x, y_noise, 'o', label = 'dado original + ruido') 
+plt.plot(x, y, 'k', label = 'dado original') 
+plt.plot(x, yfit, '-r', label = 'curva ajustada com MLP', zorder = 10) 
+plt.legend() 
+plt.xlabel('X') 
+plt.ylabel('y')
+
+plt.savefig(mlp_regression.png')
