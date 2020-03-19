@@ -1,1 +1,0 @@
-Usaria a técnica do Gradiente Descendente porque escalona melhor do que o método de Equação Normal para grandes conjuntos de dados (em o método de Equação Normal, dependendo do número de observações e features a matriz pode consumir muita memória), é de fácil implementação, não é necessário se preocupar com matrizes mal condicionadas (determinante próximo de 0).
