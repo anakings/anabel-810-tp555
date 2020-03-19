@@ -1,0 +1,1 @@
+Esse problema ocorre com todo algoritmo que se baseia no cálculo da distância durante a fase de treinamento. Para mitigar este problema se pode fazer com que todos os features tenham a misma escala. Para isto existem duas maneirascomuns: escalonamento min-max (também conhecido como normalização) e a padronização.
