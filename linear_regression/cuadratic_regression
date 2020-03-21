@@ -1,0 +1,18 @@
+import numpy as np
+
+N=100
+
+x = 2 * np.random.rand(N, 1)
+print(x)
+y = 4 + 3 * x + np.random.randn(N, 1)
+print(y)
+
+# Solve by applying the least-Squares method.
+# We use the inv() function from NumPy’s Linear Algebra module (np.linalg) to compute the inverse of a matrix.
+# We use dot() method for matrix multiplication.
+X_b = np.c_[np.ones((N, 1)), x] # add x0 = 1 to each instance
+print(X_b)
+a_optimum = np.linalg.inv(X_b.T.dot(X_b)).dot(X_b.T).dot(y)
+
+print('a0: ' + str(a_optimum[0][0]))
+print('a1: ' + str(a_optimum[1][0]))
