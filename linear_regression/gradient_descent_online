@@ -1,0 +1,27 @@
+import numpy as np
+# Define the number of examples.
+M = 1000
+# Generate a linear-looking dataset.
+X = 2 * np.random.rand(M, 1)
+y = 4 + 3 * X + np.random.randn(M, 1)
+
+# Add x0 = 1 to each instance.
+X_b = np.c_[np.ones((M, 1)), X]
+
+a = b
+mini_batch_lenght = 50
+iterations = 200
+for iteration in range(iterations):
+    matrix=np.ones(shape=(mini_batch_lenght,2))
+    matriy=np.ones(shape=(mini_batch_lenght,1))
+    for i in range(mini_batch_lenght):
+        random_index = np.random.randint(M)
+        xi = X_b[random_index:random_index+1]
+        matrix[i] = xi
+        yi = y[random_index:random_index+1]
+        matriy[i] = yi
+    for epoch in range(mini_batch_lenght):
+        gradients = -2/mini_batch_lenght * matrix.T.dot(matriy - matrix.dot(a))
+        a = a - alpha * gradients
+
+print('Mini-batch gradient-descent\na0: ' + str(a[0][0]) + '\na1: ' + str(a[1][0]) + '\n')
