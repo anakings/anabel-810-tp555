@@ -4,6 +4,8 @@ mini_batch_lenght = int(input('Insira o comprimento do mini-batch: '))
 iterations = int(input('Insira o numero de iteracoes: '))
 X_b = np.c_[np.ones((M, 1)), X] # onde X é a matriz dos valores de entrada
 # 'y' é a matriz dos valores de saída
+
+a = np.random.randn(2,1)
 for iteration in range(iterations):
     matrix=np.ones(shape=(mini_batch_lenght,2))
     matriy=np.ones(shape=(mini_batch_lenght,1))
