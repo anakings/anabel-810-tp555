@@ -56,37 +56,41 @@ def create_mini_batches(y, X1, X2, batch_size):
 	return mini_batches
 
 # function to perform mini-batch gradient descent 
-def miniBatchGradientDescent(y, X_1, X_2, alpha, mini_batch_size, maxNumIter, numParamsA): 
-	#Create empty structures
-	n_minibatches = X_1.shape[0] // mini_batch_size
-	a = np.zeros((numParamsA, maxNumIter*n_minibatches))
-	Jgd = np.zeros(maxNumIter*n_minibatches)
+def miniBatchGradientDescent(y, X_1, X_2, alpha, error_threshold, mini_batch_size, numParamsA): 
+    #Create empty structures
+    n_minibatches = X_1.shape[0] // mini_batch_size
+    a = np.zeros((numParamsA, n_minibatches))
+    Jgd = np.zeros(n_minibatches)
 
-	for i in range(numParamsA):
-		a[i, 0] = -30;
+    for i in range(numParamsA):
+        a[i, 0] = -30;
+    
+    mini_batches = create_mini_batches(y, X_1, X_2, mini_batch_size)
+    X_1, X_2, y = mini_batches[0]
+    h = hypothesis(a[0, 0], a[1, 0], X_1, X_2)
+    Jgd[0] = (1/mini_batch_size)*np.sum(np.power(y - h, 2))
 
-	h = hypothesis(a[0, 0], a[1, 0], X_1, X_2)
-	Jgd[0] = (1/mini_batch_size)*np.sum(np.power(y - h, 2))
-
-	error = 1
-	iteration = 0
-	X = np.block([x1, x2])
-	while (error > 0.001 and iteration < maxNumIter):
-		mini_batches = create_mini_batches(y, X_1, X_2, mini_batch_size)
-		for mini_batch in mini_batches:
-			h = hypothesis(a[0, iteration], a[1, iteration], X_1, X_2)
-			grad = gradient(y, X, h, mini_batch_size)
-			a_aux = a[:, iteration] - alpha*grad
-			a[0, iteration+1] = a_aux[0, 0]
-			a[1, iteration+1] = a_aux[1, 0]
-			h = hypothesis(a[0, iteration+1], a[1, iteration+1], X_1, X_2)
-			Jgd[iteration+1] = (1/mini_batch_size)*np.sum(np.power(y - h, 2))
-			error = np.abs(Jgd[iteration] - Jgd[iteration+1])
-			iteration += 1
-	return Jgd, a, iteration
+    error = 1
+    iteration = 0
+    for mini_batch_index in range(1, len(mini_batches)):
+        if error > 0.001 and iteration < n_minibatches-1:
+            X_1, X_2, y = mini_batches[mini_batch_index] 
+            X = np.block([X_1, X_2])
+            h = hypothesis(a[0, iteration], a[1, iteration], X_1, X_2)
+            grad = gradient(y, X, h, mini_batch_size)
+            a_aux = a[:, iteration] - alpha*grad
+            a[0, iteration+1] = a_aux[0, 0]
+            a[1, iteration+1] = a_aux[1, 0]
+            h = hypothesis(a[0, iteration+1], a[1, iteration+1], X_1, X_2)
+            Jgd[iteration+1] = (1/mini_batch_size)*np.sum(np.power(y - h, 2))
+            error = np.abs(Jgd[iteration] - Jgd[iteration+1])
+            iteration += 1
+        else:
+            break
+    return Jgd, a, iteration
 
 def plotContour(J, A1, A2, a):
-	fig = plt.figure(figsize=(1, 1))
+	fig = plt.figure(figsize=(5, 5))
 	cp = plt.contour(A1, A2, J)
 	plt.clabel(cp, inline=1, fontsize=10)
 	plt.xlabel('$a_1$')
@@ -99,7 +103,7 @@ def plotContour(J, A1, A2, a):
 	#plt.show()
 
 def plotErrorVsIteration(Jgd, iteration):
-	fig = plt.figure(figsize=(1, 1))
+	fig = plt.figure(figsize=(5, 5))
 	plt.plot(np.arange(0, iteration), Jgd[0:iteration])
 	plt.xlim((0, iteration))
 	plt.yscale('log')
@@ -109,9 +113,9 @@ def plotErrorVsIteration(Jgd, iteration):
 	plt.show()
 
 M = 10000
-x1 = np.random.rand(M, 1)
-x2 = np.random.rand(M, 1)
-w = np.random.rand(M, 1)
+x1 = 10.0*np.random.rand(M, 1)
+x2 = 10.0*np.random.rand(M, 1)
+w = 10.0*np.random.rand(M, 1)
 y = 2*x1 + 2*x2 + w
 
 # Calculate data point for plotting error surface.
@@ -131,4 +135,4 @@ for i in range(4):
     plotErrorVsIteration(Jgd, iteration)
     alpha = alpha*10
     
-#Depois de analisar os graficos o melhor learning rate é 0.001
+#Depois de analisar os graficos o melhor learning rate é 0.01
