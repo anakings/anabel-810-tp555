@@ -1,0 +1,134 @@
+import numpy as np
+import matplotlib.pyplot
+from mpl_toolkits import mplot3d
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from time import time
+
+def hypothesis(A1, A2, X1, X2):
+	h = A1*X1 + A2*X2
+	return h
+
+def calculateErrorSurface(y, X1, X2, M):
+	# Generate values for parameter space.
+	N = 200
+	a1 = np.linspace(-30.0, 34.0, N)
+	a2 = np.linspace(-30.0, 34.0, N)
+
+	A1, A2 = np.meshgrid(a1, a2)
+
+	# Generate points for plotting the cost-function surface.
+	J = np.zeros((N,N))
+	for iter1 in range(0, N):
+		for iter2 in range(0, N):
+			a1 = A1[iter1][iter2]
+			a2 = A2[iter1][iter2]
+			h = hypothesis(a1, a2, X1, X2)
+			J[iter1][iter2] = (1/M)*np.sum( np.square(y - h))
+			
+	return J, A1, A2
+
+# function to compute gradient of error function w.r.t. theta 
+def gradient(y, X, h, batch_size):
+	grad = -(2/batch_size)*X.T.dot(y - h)
+	return grad 
+
+# function to create a list containing mini-batches 
+def create_mini_batches(y, X1, X2, batch_size): 
+	mini_batches = [] 
+	randomize = np.arange(len(X1))
+	np.random.shuffle(randomize)
+	X1 = X1[randomize]
+	X2 = X2[randomize]
+	y = y[randomize] 
+	n_minibatches = X1.shape[0] // batch_size
+  
+	for i in range(n_minibatches + 1): 
+		X1_mini = X1[i * batch_size:(i + 1)*batch_size]
+		X2_mini = X2[i * batch_size:(i + 1)*batch_size]
+		Y_mini = y[i * batch_size:(i + 1)*batch_size] 
+		mini_batches.append((X1_mini, X2_mini, Y_mini)) 
+	if X1.shape[0] % batch_size != 0: 
+		X1_mini = X1[i * batch_size:X1.shape[0]]
+		X2_mini = X2[i * batch_size:X2.shape[0]]
+		Y_mini =  y[i * batch_size:X1.shape[0]]
+		mini_batches.append((X1_mini, X2_mini, Y_mini))
+	return mini_batches
+
+# function to perform mini-batch gradient descent 
+def miniBatchGradientDescent(y, X_1, X_2, alpha, mini_batch_size, maxNumIter, numParamsA): 
+	#Create empty structures
+	n_minibatches = X_1.shape[0] // mini_batch_size
+	a = np.zeros((numParamsA, maxNumIter*n_minibatches))
+	Jgd = np.zeros(maxNumIter*n_minibatches)
+
+	for i in range(numParamsA):
+		a[i, 0] = -30;
+
+	h = hypothesis(a[0, 0], a[1, 0], X_1, X_2)
+	Jgd[0] = (1/mini_batch_size)*np.sum(np.power(y - h, 2))
+
+	error = 1
+	iteration = 0
+	X = np.block([x1, x2])
+	while (error > 0.001 and iteration < maxNumIter):
+		mini_batches = create_mini_batches(y, X_1, X_2, mini_batch_size)
+		for mini_batch in mini_batches:
+			h = hypothesis(a[0, iteration], a[1, iteration], X_1, X_2)
+			grad = gradient(y, X, h, mini_batch_size)
+			a_aux = a[:, iteration] - alpha*grad
+			a[0, iteration+1] = a_aux[0, 0]
+			a[1, iteration+1] = a_aux[1, 0]
+			h = hypothesis(a[0, iteration+1], a[1, iteration+1], X_1, X_2)
+			Jgd[iteration+1] = (1/mini_batch_size)*np.sum(np.power(y - h, 2))
+			error = np.abs(Jgd[iteration] - Jgd[iteration+1])
+			iteration += 1
+	return Jgd, a, iteration
+
+def plotContour(J, A1, A2, a):
+	fig = plt.figure(figsize=(1, 1))
+	cp = plt.contour(A1, A2, J)
+	plt.clabel(cp, inline=1, fontsize=10)
+	plt.xlabel('$a_1$')
+	plt.ylabel('$a_2$')
+	plt.title('Cost-function\'s Contour')
+	#plt.plot(a_opt[0], a_opt[1], c='r', marker='*')
+	plt.plot(a[0, :], a[1, :], 'kx')
+	plt.xticks(np.arange(-32, 34, step=4.0))
+	plt.yticks(np.arange(-32, 34, step=4.0))
+	#plt.show()
+
+def plotErrorVsIteration(Jgd, iteration):
+	fig = plt.figure(figsize=(1, 1))
+	plt.plot(np.arange(0, iteration), Jgd[0:iteration])
+	plt.xlim((0, iteration))
+	plt.yscale('log')
+	plt.xlabel('Iteration')
+	plt.ylabel('$J_e$')
+	plt.title('Error vs. Iteration number')
+	plt.show()
+
+M = 10000
+x1 = np.random.rand(M, 1)
+x2 = np.random.rand(M, 1)
+w = np.random.rand(M, 1)
+y = 2*x1 + 2*x2 + w
+
+# Calculate data point for plotting error surface.
+J, A1, A2 = calculateErrorSurface(y, x1, x2, M)
+
+alpha = 0.0001 # learning rate
+mini_batch_size = 32
+maxNumIter = 100
+numParamsA = 2
+
+for i in range(4):
+    tic = time()
+    Jgd, a, iteration = miniBatchGradientDescent(y, x1, x2, alpha, mini_batch_size, maxNumIter, numParamsA)
+    toc = time()
+    print('Resolution time (alpha=' + str(alpha) + '): ' + str(toc - tic) + ' s')
+    plotContour(J, A1, A2, a)
+    plotErrorVsIteration(Jgd, iteration)
+    alpha = alpha*10
+    
+#Depois de analisar os graficos o melhor learning rate é 0.001
