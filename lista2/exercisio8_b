@@ -1,0 +1,120 @@
+import numpy as np
+from mpl_toolkits import mplot3d
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from time import time
+
+def hypothesis(A1, A2, X1, X2):
+	h = A1*X1 + A2*X2
+	return h
+
+def calculateErrorSurface(y, X1, X2, M):
+	# Generate values for parameter space.
+	N = 200
+	a1 = np.linspace(-30.0, 34.0, N)
+	a2 = np.linspace(-30.0, 34.0, N)
+
+	A1, A2 = np.meshgrid(a1, a2)
+
+	# Generate points for plotting the cost-function surface.
+	J = np.zeros((N,N))
+	for iter1 in range(0, N):
+		for iter2 in range(0, N):
+			a1 = A1[iter1][iter2]
+			a2 = A2[iter1][iter2]
+			h = hypothesis(a1, a2, X1, X2)
+			J[iter1][iter2] = (1/M)*np.sum( np.square(y - h))
+			
+	return J, A1, A2
+
+def plotSurfaceError3D(J, A1, A2):
+	# Plot cost-function surface.
+	fig = plt.figure(figsize=(5, 5))
+	ax = fig.gca(projection='3d')
+	surf = ax.plot_surface(A1, A2, J, cmap=cm.coolwarm, linewidth=0, antialiased=False)
+	# Add a color bar which maps values to colors.
+	fig.colorbar(surf, shrink=0.5, aspect=5)
+	ax.set_xlabel('$a_1$')
+	ax.set_ylabel('$a_2$')
+	ax.set_zlabel('$J_e$');
+	plt.title('Cost-function\'s Surface')
+	ax.view_init(20, 45)
+	fig
+	#Show the plot.
+	#plt.show()
+
+# function to compute gradient of error function w.r.t. theta 
+def gradient(y, X, h, batch_size):
+	grad = -(2/batch_size)*X.T.dot(y - h)
+	return grad 
+
+def BatchGradientDescent(y, X_1, X_2, alpha, error_threshold, maxNumIter, numParamsA, M):
+    a = np.zeros((2, maxNumIter))
+    Jgd = np.zeros(maxNumIter)
+    a[0, 0] = -20;
+    a[1, 0] = -20;
+    h = hypothesis(a[0, 0], a[1, 0], X_1, X_2)
+    Jgd[0] = (1/M)*np.sum(np.power(y - h, 2))
+    
+    error = 1
+    iteration = 0
+    X = np.block([x1, x2])
+    while(error > error_threshold and iteration < maxNumIter-1):
+        h = hypothesis(a[0, iteration], a[1, iteration], X_1, X_2)
+        grad = gradient(y, X, h, M)
+        a_aux = a[:, iteration] - alpha*grad
+        a[0, iteration+1] = a_aux[0,0]
+        a[1, iteration+1] = a_aux[1,0]
+        h = hypothesis(a[0, iteration+1], a[1, iteration+1], X_1, X_2)
+        Jgd[iteration+1] = (1/M)*np.sum(np.power(y - h, 2))
+        error = np.abs(Jgd[iteration]-Jgd[iteration+1])
+        iteration += 1
+    return Jgd, a, iteration
+
+def plotContour(J, A1, A2, a):
+	fig = plt.figure(figsize=(3, 3))
+	cp = plt.contour(A1, A2, J)
+	plt.clabel(cp, inline=1, fontsize=10)
+	plt.xlabel('$a_1$')
+	plt.ylabel('$a_2$')
+	plt.title('Cost-function\'s Contour')
+	#plt.plot(a_opt[0], a_opt[1], c='r', marker='*')
+	plt.plot(a[0, :], a[1, :], 'kx')
+	plt.xticks(np.arange(-32, 34, step=4.0))
+	plt.yticks(np.arange(-32, 34, step=4.0))
+	#plt.show()
+
+def plotErrorVsIteration(Jgd, iteration):
+	fig = plt.figure(figsize=(3, 3))
+	plt.plot(np.arange(0, iteration), Jgd[0:iteration])
+	plt.xlim((0, iteration))
+	plt.yscale('log')
+	plt.xlabel('Iteration')
+	plt.ylabel('$J_e$')
+	plt.title('Error vs. Iteration number')
+	plt.show()
+    
+#-------------------------------------------------------------------------------------------------------------------------------
+M = 1000
+x1 = np.random.normal(loc=0.0, scale=1.0, size=(M, 1))
+x2 = np.random.normal(loc=10.0, scale=10.0, size=(M, 1))
+y = x1 + x2
+
+# Calculate data point for plotting error surface.
+J, A1, A2 = calculateErrorSurface(y, x1, x2, M)
+plotSurfaceError3D(J, A1, A2)
+
+alpha = 10**(-6) # learning rate
+error_threshold = 0.001
+numParamsA = 2
+
+maxNumIter = 2000
+
+for i in range(5):
+    Jgd, a, iteration = BatchGradientDescent(y, x1, x2, alpha, error_threshold, maxNumIter, numParamsA, M)
+    plotContour(J, A1, A2, a)
+    print(alpha)
+    plotErrorVsIteration(Jgd, iteration)
+    alpha = alpha*10
+    
+#Depois de analisar os graficos o melhor learning rate é 0.01
