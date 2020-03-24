@@ -59,7 +59,7 @@ def BatchGradientDescent(y, X_1, X_2, alpha, error_threshold, maxNumIter, numPar
     error = 1
     iteration = 0
     X = np.block([x1, x2])
-    while(error > error_threshold and iteration < maxNumIter-1):
+    while iteration < maxNumIter-1:
         h = hypothesis(a[0, iteration], a[1, iteration], X_1, X_2)
         grad = gradient(y, X, h, M)
         a_aux = a[:, iteration] - alpha*grad
@@ -96,25 +96,77 @@ def plotErrorVsIteration(Jgd, iteration):
     
 #-------------------------------------------------------------------------------------------------------------------------------
 M = 1000
-x1 = np.random.normal(loc=0.0, scale=1.0, size=(M, 1))
-x2 = np.random.normal(loc=10.0, scale=10.0, size=(M, 1))
-y = x1 + x2
+media1 = 0.0
+desvio1 = 1.0
+media2 = 10.0
+desvio2 = 10.0
+x1 = np.random.normal(loc=media1, scale=desvio1, size=(M, 1))
+x2 = np.random.normal(loc=media2, scale=desvio2, size=(M, 1))
+w = np.random.randn(M, 1)
+y = x1 + x2 + w
 
+print('\n\nSem Escalonamento')
 # Calculate data point for plotting error surface.
 J, A1, A2 = calculateErrorSurface(y, x1, x2, M)
 plotSurfaceError3D(J, A1, A2)
 
-alpha = 10**(-4) # learning rate
+alpha = 0.001 # learning rate
 error_threshold = 0.001
 numParamsA = 2
 
 maxNumIter = 2000
 
-for i in range(5):
-    Jgd, a, iteration = BatchGradientDescent(y, x1, x2, alpha, error_threshold, maxNumIter, numParamsA, M)
-    plotContour(J, A1, A2, a)
-    print(alpha)
-    plotErrorVsIteration(Jgd, iteration)
-    alpha = alpha*10
+Jgd, a, iteration = BatchGradientDescent(y, x1, x2, alpha, error_threshold, maxNumIter, numParamsA, M)
+plotContour(J, A1, A2, a)
+plotErrorVsIteration(Jgd, iteration)
+print(a[0,iteration],a[1,iteration])
     
 #Depois de analisar os graficos o melhor learning rate é 0.001
+
+#Min-max------------------------------------------------------------------------------------------------------------------------
+print('\n\nMin-Max')
+mini1 = np.amin(x1)
+maxi1 = np.amax(x1)
+x11 = np.zeros(shape=(M, 1))
+for i, value in enumerate(x1):
+    x11[i,0] = (value-mini1)/(maxi1-mini1)
+
+mini2 = np.amin(x2)
+maxi2 = np.amax(x2)
+x22 = np.zeros(shape=(M, 1))
+for i, value in enumerate(x2):
+    x22[i,0] = (value-mini2)/(maxi2-mini2)
+
+y1 = x11 + x22 + w
+alpha = 0.01
+    
+# Calculate data point for plotting error surface.
+J, A1, A2 = calculateErrorSurface(y1, x11, x22, M)
+plotSurfaceError3D(J, A1, A2)
+
+Jgd, a, iteration = BatchGradientDescent(y1, x11, x22, alpha, error_threshold, maxNumIter, numParamsA, M)
+plotContour(J, A1, A2, a)
+plotErrorVsIteration(Jgd, iteration)
+print(a[0,iteration],a[1,iteration])
+
+#Padronizacao-----------------------------------------------------------------------------------------------------------------------
+print('\n\nPadronizacao')
+x111 = np.zeros(shape=(M, 1))
+for i, value in enumerate(x1):
+    x111[i,0] = (value-media1)/(desvio1)
+
+x222 = np.zeros(shape=(M, 1))
+for i, value in enumerate(x2):
+    x222[i,0] = (value-media2)/(desvio2)
+    
+y2 = x111 + x222 + w
+alpha = 0.01
+
+# Calculate data point for plotting error surface.
+J, A1, A2 = calculateErrorSurface(y2, x111, x222, M)
+plotSurfaceError3D(J, A1, A2)
+
+Jgd, a, iteration = BatchGradientDescent(y2, x111, x222, alpha, error_threshold, maxNumIter, numParamsA, M)
+plotContour(J, A1, A2, a)
+plotErrorVsIteration(Jgd, iteration)
+print(a[0,iteration],a[1,iteration])
