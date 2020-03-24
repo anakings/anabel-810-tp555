@@ -1,1 +1,1 @@
-O que provavelmente está acontecendo é que a função de custo é muito irregular e o algoritmo está dentro de um minimo locai. Para consertar isto eu mudaria para o algoritmo SGD (Gradiente Descendente Estocástico) pois a aleatoriedade deste é boa para escapar de mínimos locais.
+O que provavelmente está acontecendo é que a função de custo é muito irregular e o algoritmo está dentro de um minimo local. Para consertar isto eu mudaria para o algoritmo SGD (Gradiente Descendente Estocástico) pois a aleatoriedade deste é boa para escapar de mínimos locais.
