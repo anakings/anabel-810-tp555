@@ -112,21 +112,21 @@ def plotErrorVsIteration(Jgd, iteration):
 	plt.title('Error vs. Iteration number')
 	plt.show()
 
-M = 10000
-x1 = 10.0*np.random.rand(M, 1)
-x2 = 10.0*np.random.rand(M, 1)
-w = 10.0*np.random.rand(M, 1)
+M = 1000
+x1 = np.random.rand(M, 1)
+x2 = np.random.rand(M, 1)
+w = np.random.rand(M, 1)
 y = 2*x1 + 2*x2 + w
 
 # Calculate data point for plotting error surface.
 J, A1, A2 = calculateErrorSurface(y, x1, x2, M)
 
-alpha = 0.0001 # learning rate
+alpha = 0.8 # learning rate
 mini_batch_size = 32
 maxNumIter = 100
 numParamsA = 2
 
-for i in range(4):
+for i in range(5):
     tic = time()
     Jgd, a, iteration = miniBatchGradientDescent(y, x1, x2, alpha, mini_batch_size, maxNumIter, numParamsA)
     toc = time()
@@ -135,4 +135,4 @@ for i in range(4):
     plotErrorVsIteration(Jgd, iteration)
     alpha = alpha*10
     
-#Depois de analisar os graficos o melhor learning rate é 0.01
+#Depois de analisar os graficos o melhor learning rate é 1
