@@ -1,5 +1,0 @@
-Com os gráficos do item anterior pude chegar as seguintes conclusões:
- .A versão online é muito menos regular, o seja, tem mudanças pronunciadas.
- .A versão online é a mais rapida e a versão batch é a mais lenta.
- .A versão batch tem um comportamento muito regular, o seja, converge diretamente ao mínimo erro.
- .A versão mini_batch possui um comportamento intermedio entre a batch e a online, mesmo em regularidad como em rapides.
