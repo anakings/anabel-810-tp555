@@ -1,0 +1,1 @@
+O que está acontecendo é que existe um sobreajuste (overfitting). As três maneiras de resolver isso são as formas holdout, k-fold, leave-p-out, que são as três formas de validacão cruzada mais utilizadas
