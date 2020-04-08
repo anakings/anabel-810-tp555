@@ -1,0 +1,1 @@
+Percebo que a majoria dos pesos em lasso são cero devido a que essa tecnica tende a eliminar completamente os pesos dos atributos menos importantes, isto leva a modelos mais regulares (menos complexos).
