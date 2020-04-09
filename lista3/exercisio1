@@ -1,1 +1,1 @@
-O que está acontecendo é que existe um sobreajuste (overfitting). As três maneiras de resolver isso são a validacão cruzada (holdout, k-fold, leave-p-out são as mais utilizadas), regularização (rigde regression, LASSO e elastic net)
+O que está acontecendo é que existe um sobreajuste (overfitting). As três maneiras de resolver isso são as curvas de aprendizado, a validacão cruzada (holdout, k-fold, leave-p-out são as mais utilizadas) e a regularização (rigde regression, LASSO e elastic net)
