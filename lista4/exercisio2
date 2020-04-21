@@ -1,0 +1,5 @@
+P[sim_casa. | pagou=sim] = 3/4
+P[nao_casa. | pagou=sim] = 4/6
+
+P[sim_casa. | pagou=nao] = 1/4
+P[nao_casa. | pagou=nao] = 2/6
