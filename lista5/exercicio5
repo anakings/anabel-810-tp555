@@ -1,0 +1,1 @@
+Devo implementar dois classificadores de regressão logística pois o classificador de regressão Softmax deve ser usado com classes mutuamente exclusivas que não é o caso.
