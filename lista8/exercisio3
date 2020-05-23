@@ -1,0 +1,1 @@
+Sim é possível acelerar o treinamento de um bagging ensemble e pasting ensemble distribuindo-o por vários servidores, treinando todos os predictores em diferentes servidores em paralelo. Da mesma forma, previsões podem ser feitas em paralelo.
