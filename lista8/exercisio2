@@ -1,1 +1,3 @@
-O classificador de votação rígida agrega as previsões de cada classificador e prever a classe que obtém mais votos e classificador de votação suave  agrega as previsões de cada classificador e prever a classe que obtém mais
+-O classificador de votação rígida agrega as previsões de cada classificador e prever a classe que obtém mais votos e o classificador de votação suave agrega as previsões de cada classificador e preve a classe que obtém mais probabilidade de classe.
+-O classificador de votação suave Muitas vezes, obtém um desempenho superior ao voto duro, porque dá mais peso a votos altamente confiantes.
+-O classificador de votação suave precissa que todos os classificadores possam estimar probabilidades de classe e o classificador de votação rígida não.
