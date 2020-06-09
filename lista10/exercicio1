@@ -1,0 +1,7 @@
+Vantagems:
+-Balanceamento de carga de processamento para cada subgrafo em várias CPUs ou GPUs.
+-Computacao distribuida em varios servidores para treinar grandes conjuntos de dados de treinamento.
+-O grafo é transformado em código C++, o qual é uma lenguagem de mais baixo nível do que Python e portanto a execucao do código é muito mais rápido.
+
+Desvantagems:
+-Adiciona mais complexidade na hora de disenhar o modelo de treinamento.
