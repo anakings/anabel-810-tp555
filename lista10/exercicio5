@@ -1,0 +1,2 @@
+Uma variavel é inicializada quando se abre uma sessao de tensorflow e se aplica o comando run (ex: x.initializer.run()).
+A variavel é destruida quando se fecha a sessao de tensorflow.
