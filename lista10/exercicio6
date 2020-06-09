@@ -1,0 +1,3 @@
+O valor de um nó tipo variavel é mantido durante toda a sessao tensorflow desde que é inicializada até que a sessao é fechada.
+Um nó do tipo placeholder é utilizado para passar os dados do conjunto de treinamento para o grafo tensorflow dentro da própia sessao tensorflow.
+Entao uma variavel poderia ser vista como uma constante dentro de uma sessao tensorflow mientras que o placeholder sería como uma variavel dentro da sessao tensorflow na qual pode variar suas dimesoes e valor em cada iteracao.
