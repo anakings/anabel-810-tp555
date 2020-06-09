@@ -1,0 +1,2 @@
+No caso que se execute um grafo para avaliar uma operação que depende de um placeholder sem fornecer nenhum valor para o placeholder se receberá uma exceção.
+Se a operação não depender do placeholder ela vai se executar corretamente. 
