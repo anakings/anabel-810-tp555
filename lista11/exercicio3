@@ -1,0 +1,1 @@
+Geralmente é preferível usar um classificador de regressão logística em vez de um perceptron, pois os perceptrons não produzem como saída uma probabilidade de classe, em vez disso, eles apenas fazem previsões com base em um limiar rígido, i.e., 0 ou 1.
