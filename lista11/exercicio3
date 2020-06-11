@@ -1,1 +1,2 @@
-Geralmente é preferível usar um classificador de regressão logística em vez de um perceptron, pois os perceptrons não produzem como saída uma probabilidade de classe, em vez disso, eles apenas fazem previsões com base em um limiar rígido, i.e., 0 ou 1.
+-Geralmente é preferível usar um classificador de regressão logística em vez de um perceptron, pois os perceptrons não produzem como saída uma probabilidade de classe, em vez disso, eles apenas fazem previsões com base em um limiar rígido, i.e., 0 ou 1. Isso faz com que o preceptron não seja diferenciavel e portanto não possa ser aplicado para um modelo como o gradiente descendente.
+-Para tornar um perceptron num classificador de regressão logística basta evaluar f(g(x)) onde f é a funcão sigmoid ou logística.
